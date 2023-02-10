@@ -1,0 +1,39 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.8'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	// spring data jpa
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	//Security 추가
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// web mvc 추가
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	//json web token
+	implementation group: 'io.jsonwebtoken', name: 'jjwt', version:  '0.9.1'
+	//lombok
+	implementation 'org.projectlombok:lombok:1.18.26'
+	//mysql
+	implementation 'mysql:mysql-connector-java:8.0.30'
+
+	implementation group: 'org.mariadb.jdbc', name: 'mariadb-java-client', version: '3.0.6'
+	runtimeOnly 'mysql:mysql-connector-java'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
