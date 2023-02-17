@@ -29,19 +29,21 @@ public class MemberDto {
     private String password;
 
 
-//    @ElementCollection(fetch = FetchType.LAZY)
-//    @Enumerated(EnumType.STRING)
-//    private List<Role> roles = new ArrayList<>();
 
 
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Enumerated(EnumType.STRING)
+    private List<Role> roles = new ArrayList<>();
+
+
+
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
     @Builder
-    public MemberDto(String email , String password, List<Role> roles){
+    public MemberDto(String email, String password, List<Role> roles) {
         this.email = email;
         this.password = password;
-//        this.roles = Collections.singletonList(Role.ROLE_MEMBER);
+        this.roles = Collections.singletonList(Role.ROLE_MEMBER);
     }
-//
-//    public void addRole(Role role) {
-//        this.roles.add(role);
-//    }
 }

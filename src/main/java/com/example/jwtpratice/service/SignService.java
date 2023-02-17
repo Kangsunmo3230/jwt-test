@@ -10,6 +10,8 @@ import com.example.jwtpratice.expection.MemberEmailAlreadyExistException;
 import com.example.jwtpratice.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,6 +19,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -55,13 +59,9 @@ public class SignService  {
         MemberDto member = memberRepository.findByEmail(requestDto.getEmail()).orElseThrow(LoginFailureException::new);
         log.info("member => {}",member);
         log.info("requestDto => {}",requestDto);
-        if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword()))
+        if (!passwordEncoder.matches(requestDto.getPassword(), member.getPassword())){
             throw new LoginFailureException();
-        return new MemberLoginRequestDto(member.getId(), jwtTokenProvider.createToken(requestDto.getEmail()));
-
-    }
-
-    public Optional<MemberDto> findByUsername(String email) {
-        return memberRepository.findByEmail(email);
+        }
+            return new MemberLoginRequestDto(requestDto.getEmail(), requestDto.getPassword(),member.getId(), jwtTokenProvider.createToken(requestDto.getEmail()));
     }
 }

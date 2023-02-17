@@ -6,13 +6,19 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MemberLoginRequestDto {
-    private String Email;
-    private String Password;
+
+
 
 
     private Long id;
     private String token;
-    public MemberLoginRequestDto(Long id, String token) {
+    private String Email;
+    private String Password;
+
+
+    public MemberLoginRequestDto(String email, String password,Long id, String token) {
+        this.Email = email;
+        this.Password = password;
         this.id = id;
         this.token = token;
     }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
@@ -48,7 +49,9 @@ public class JwtTokenProvider {
 
     public Authentication getAuthentication(String token) {
         log.info("getAuthentication token=> {}",token);
+        log.info("getMemberEmail(token) => {}",getMemberEmail(token));
         UserDetails userDetails = memberDetailsService.loadUserByUsername(getMemberEmail(token));
+        log.info("userDetails => {}",userDetails);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -65,11 +68,13 @@ public class JwtTokenProvider {
 
     public String resolveToken(HttpServletRequest req) {
         log.info("req=> {}",req.getHeader("X-AUTH-TOKEN"));
+
         return req.getHeader("X-AUTH-TOKEN");
     }
 
     public boolean validateTokenExceptExpiration(String token) {
         try {
+        log.info("token === validation {}",token);
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch(Exception e) {
