@@ -25,7 +25,9 @@ public class JwtTokenProvider {
     @Value("${jwt.secretKey}")
     private String secretKey;
 
-    private long tokenValidTime = 1000L * 60 * 30; // 30분
+    private long tokenValidTime = 1000L * 60 * 1; // 30분
+
+    private long refreshTokenValidTime = 1000L * 60 * 60 *24 *7; //7일
 
     private final UserDetailsService memberDetailsService;
 
@@ -47,6 +49,16 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    public String createRefreshToken(){
+        Date now = new Date();
+
+        return Jwts.builder()
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + refreshTokenValidTime))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
+    }
+
     public Authentication getAuthentication(String token) {
         log.info("getAuthentication token=> {}",token);
         log.info("getMemberEmail(token) => {}",getMemberEmail(token));
@@ -64,6 +76,7 @@ public class JwtTokenProvider {
         } catch(ExpiredJwtException e) {
             return e.getClaims().getSubject();
         }
+        //25
     }
 
     public String resolveToken(HttpServletRequest req) {
@@ -72,12 +85,23 @@ public class JwtTokenProvider {
         return req.getHeader("X-AUTH-TOKEN");
     }
 
+    //토큰 만료인지 체크
     public boolean validateTokenExceptExpiration(String token) {
         try {
         log.info("token === validation {}",token);
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return !claims.getBody().getExpiration().before(new Date());
         } catch(Exception e) {
+            return false;
+        }
+    }
+
+    //refreshToken 만료 체크
+    public boolean validateTokenExpiration(String token) {
+        try {
+            Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
             return false;
         }
     }

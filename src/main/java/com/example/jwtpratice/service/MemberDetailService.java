@@ -26,12 +26,12 @@ public class MemberDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         MemberDto member = memberRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("아이디가 존재하지 않습니다."));
         List<GrantedAuthority> roles = new ArrayList<>();
-        roles.add(new SimpleGrantedAuthority(member.getRoles().toString()));
+       // roles.add(new SimpleGrantedAuthority(member.getRoles().toString()));
 
         return MemberDetail.builder()
                 .username(member.getEmail())
                 .password(member.getPassword())
-                .authorities(roles)
+               // .authorities(roles)
                 .build();
     }
 }

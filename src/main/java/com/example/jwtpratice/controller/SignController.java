@@ -3,6 +3,8 @@ package com.example.jwtpratice.controller;
 
 import com.example.jwtpratice.dto.MemberLoginRequestDto;
 import com.example.jwtpratice.dto.MemberRegisterRequestDto;
+import com.example.jwtpratice.dto.TokenRequestDto;
+import com.example.jwtpratice.dto.TokenResponseDto;
 import com.example.jwtpratice.service.SignService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,5 +36,12 @@ public class SignController {
         MemberLoginRequestDto responseDto = signService.loginMember(requestDto);
         log.info("responseDto=> {}",responseDto);
         return new ResponseEntity<MemberLoginRequestDto>(responseDto,HttpStatus.OK);
+    }
+
+    @PostMapping("/reissue")
+    public ResponseEntity<TokenResponseDto> reIssue(@RequestBody TokenRequestDto tokenRequestDto) {
+        log.info("tokenReuqeustDto => {}",tokenRequestDto);
+        TokenResponseDto responseDto = signService.reIssue(tokenRequestDto);
+        return new ResponseEntity<TokenResponseDto>(responseDto,HttpStatus.OK);
     }
 }
